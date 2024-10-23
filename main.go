@@ -4,10 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"unsafemango.com/rest-api-go/db"
 	"unsafemango.com/rest-api-go/models"
 )
 
 func main() {
+	db.InitDB()
 	server := gin.Default()
 
 	server.GET("/events", getEvents) // handler for incoming http get request
