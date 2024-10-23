@@ -1,0 +1,19 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Go vendor directory (when using Go modules)
+vendor/
+
+# Go modules
+go.sum
+go.mod
+
+# Dependency directories (often used with vendoring tools like Godep, Glide)
+Godeps/
