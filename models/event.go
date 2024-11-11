@@ -15,8 +15,6 @@ type Event struct {
 	UserID      int
 }
 
-var events = []Event{}
-
 // method to save an event
 func (e Event) Save() error {
 	// later add to database
@@ -36,9 +34,9 @@ func (e Event) Save() error {
 		return err
 	}
 
-	id, err := result.LastInsertId() // get the id of the last item inserted
+	_, err = result.LastInsertId() // get the id of the last item inserted
 
-	e.ID = id
+	// e.ID = id
 	return err
 }
 
