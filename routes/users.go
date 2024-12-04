@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"unsafemango.com/rest-api-go/models"
+	"unsafemango.com/rest-api-go/utils"
 )
 
 func signup(context *gin.Context) {
@@ -52,7 +53,17 @@ func login(context *gin.Context) {
 		return
 	}
 
+	// generate token for user
+	token, err := utils.GenrateToken(user.Email, user.ID)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Could not authenticate user.",
+		})
+		return
+	}
+
 	context.JSON(http.StatusOK, gin.H{
 		"message": "Login Successful.",
+		"token":   token,
 	})
 }
