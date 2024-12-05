@@ -6,7 +6,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"unsafemango.com/rest-api-go/models"
-	"unsafemango.com/rest-api-go/utils"
 )
 
 // function to get a list of events
@@ -45,27 +44,8 @@ func getEvent(context *gin.Context) {
 
 // function to create an event
 func createEvent(context *gin.Context) {
-	token := context.Request.Header.Get("Authorization")
-
-	// check if we have a token
-	if token == "" {
-		context.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Not authorized",
-		})
-		return
-	}
-
-	// check if its not a valid token
-	userId, err := utils.VerifyToken(token)
-	if err != nil {
-		context.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Not unauthorized",
-		})
-		return
-	}
-
 	var event models.Event
-	err = context.ShouldBindJSON(&event)
+	err := context.ShouldBindJSON(&event)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
@@ -74,6 +54,7 @@ func createEvent(context *gin.Context) {
 		return
 	}
 
+	userId := context.GetInt64("userId")
 	event.UserID = userId
 
 	err = event.Save()
