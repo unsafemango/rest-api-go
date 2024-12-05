@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -12,7 +11,6 @@ const secretKey = "supersecretkey"
 
 func GenrateToken(email string, userId int64) (string, error) {
 	// generate a new token with data attached to it
-	fmt.Println("UserID from utils package => ", userId)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email":  email,
 		"userId": userId,
