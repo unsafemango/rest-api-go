@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,13 +21,15 @@ func signup(context *gin.Context) {
 		return
 	}
 
-	err = user.Save()
+	userId, err := user.Save()
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Could not save user. Email already exists.",
 		})
 		return
+	} else {
+		fmt.Println("User ID: ", userId)
 	}
 
 	context.JSON(http.StatusCreated, gin.H{
@@ -38,6 +41,7 @@ func login(context *gin.Context) {
 	var user models.User
 
 	err := context.ShouldBindJSON(&user)
+
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"message": "Could not parse data.",
@@ -46,6 +50,7 @@ func login(context *gin.Context) {
 	}
 
 	err = user.ValidateCredentials()
+
 	if err != nil {
 		context.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Could not authenticate user.",

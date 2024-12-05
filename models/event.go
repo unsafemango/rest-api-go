@@ -12,11 +12,11 @@ type Event struct {
 	Description string    `binding:"required"`
 	Location    string    `binding:"required"`
 	DateTime    time.Time `binding:"required"`
-	UserID      int
+	UserID      int64
 }
 
 // method to save an event
-func (e Event) Save() error {
+func (e *Event) Save() error {
 	// later add to database
 	query := `INSERT INTO events (name, description, location, dateTime, user_id) 
 	VALUES (?,?,?,?,?)`
@@ -34,9 +34,9 @@ func (e Event) Save() error {
 		return err
 	}
 
-	_, err = result.LastInsertId() // get the id of the last item inserted
+	id, err := result.LastInsertId() // get the id of the last item inserted
 
-	// e.ID = id
+	e.ID = id
 	return err
 }
 
