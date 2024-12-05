@@ -2,14 +2,20 @@ package utils
 
 import (
 	"errors"
+	"log"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 )
 
-const secretKey = "supersecretkey"
-
 func GenrateToken(email string, userId int64) (string, error) {
+	// Load environment variables from the .env file
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	// generate a new token with data attached to it
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email":  email,
@@ -18,10 +24,15 @@ func GenrateToken(email string, userId int64) (string, error) {
 	})
 
 	// return a single string to be sent to the client
-	return token.SignedString([]byte(secretKey))
+	return token.SignedString([]byte(os.Getenv("SECRET")))
 }
 
 func VerifyToken(token string) (int64, error) {
+	// Load environment variables from the .env file
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC) // type checking synthax
 
@@ -30,7 +41,7 @@ func VerifyToken(token string) (int64, error) {
 			return nil, errors.New("unexpected sign in method")
 		}
 
-		return []byte(secretKey), nil
+		return []byte(os.Getenv("SECRET")), nil
 	})
 
 	if err != nil {

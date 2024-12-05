@@ -17,3 +17,5 @@ go.mod
 
 # Dependency directories (often used with vendoring tools like Godep, Glide)
 Godeps/
+
+.env
